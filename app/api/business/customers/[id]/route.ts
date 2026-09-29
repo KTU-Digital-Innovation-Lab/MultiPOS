@@ -28,10 +28,11 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
             return NextResponse.json({ error: "Unauthorized", success: false }, { status: 401 });
         } 
 
-        const { userId,employeeId, businessId } = session;
+        const { ipAddress } = await getRequestMeta();
+        const { userId, businessId } = session;
         const body = await request.json();
         
-        const response = await CustomerService.updateCustomer(body, id, businessId, userId);
+        const response = await CustomerService.updateCustomer(body, id, businessId, userId, ipAddress);
         if (response.success && response.message) {
             return NextResponse.json(
                 { success: true, message: response.message, data: response.data },
